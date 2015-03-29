@@ -31,24 +31,26 @@
             }
 
             function render(data) {
-                var records = d3.select("#pane .records").selectAll(".record")
-                    .data(data, function(d){return d.timestamp;});
-
                 var dTo = new Date();
                 var dFrom = new Date(dTo);
                 dFrom.setSeconds(dFrom.getSeconds() - 30);
                 var x = d3.time.scale().domain([dFrom, dTo]).rangeRound([0, 450]);
 
+                var records = d3.select("#pane .records").selectAll(".record")
+                    .data(data.filter(function(d) {
+                        return d.date.getTime() >= dFrom.getTime();
+                    }));
+
                 var entering = records.enter()
                     .append("circle")
                     .classed("record", true)
-                    .attr("cy", function(d) { return d.value * 10 * -1;})
                     .attr("r", 5);
 
                 records.each(function(d, i) {
                     d3.select(this)
                         .attr("cx", x(d.date))
-                        .attr("fill", d.custom === true ? "blue" : "red");
+                        .attr("fill", d.custom === true ? "blue" : "red")
+                        .attr("cy", d.value * 10 * -1);
                 });
             }
         </script>
