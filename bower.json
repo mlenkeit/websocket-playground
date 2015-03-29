@@ -1,0 +1,20 @@
+{
+  "name": "websocket-playground",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mlenkeit/websocket-playground",
+  "authors": [
+    "Maximilian Lenkeit <maximilian.lenkeit@sap.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.5"
+  }
+}

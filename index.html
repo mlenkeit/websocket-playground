@@ -2,20 +2,62 @@
     <head>
         <title>Web Sockets</title>
         
+        <script src="bower_components/d3/d3.min.js"></script>
+
         <script type="text/javascript">
+            var data = [];
             var socket = new WebSocket("ws://localhost:8083");
             socket.onmessage = function(event) {
-                document.getElementById('out').innerHTML += 'Received: ' + event.data + '<br />';
+                try {
+                    var json = JSON.parse(event.data);
+                    json.date = new Date(json.timestamp);
+                    data.push(json);
+                    render(data);
+                } catch(e) {
+                    // no json, regular string
+                    document.getElementById('out').innerHTML = 'Received: ' + event.data;
+                }
             };
 
             function send() {
                 var value = document.getElementById('inp').value;
                 socket.send(value);
             }
+
+            function handleKeyUp() {
+                if (event.keyCode === 13) { // enter
+                    send();
+                }
+            }
+
+            function render(data) {
+                var records = d3.select("#pane .records").selectAll(".record")
+                    .data(data, function(d){return d.timestamp;});
+
+                var dTo = new Date();
+                var dFrom = new Date(dTo);
+                dFrom.setSeconds(dFrom.getSeconds() - 30);
+                var x = d3.time.scale().domain([dFrom, dTo]).rangeRound([0, 450]);
+
+                var entering = records.enter()
+                    .append("circle")
+                    .classed("record", true)
+                    .attr("cy", function(d) { return d.value * 10 * -1;})
+                    .attr("r", 5);
+
+                records.each(function(d, i) {
+                    d3.select(this)
+                        .attr("cx", x(d.date))
+                        .attr("fill", d.custom === true ? "blue" : "red");
+                });
+            }
         </script>
     </head>
     <body>
-        <input id="inp" /> <button onclick="send();">Send</button>
+        <input id="inp" placeholder="Enter to send" onkeyup="handleKeyUp();" /> <button onclick="send();">Send</button>
         <div id="out"></div>
+        <svg id="pane" height="500" width="500">
+            <g class="records" transform="translate(0,425)"></g>
+        </svg>
     </body>
 </html>
