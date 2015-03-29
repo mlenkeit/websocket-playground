@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Web Sockets</title>
+        
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:8083");
+            socket.onmessage = function(event) {
+                document.getElementById('out').innerHTML += 'Received: ' + event.data + '<br />';
+            };
+
+            function send() {
+                var value = document.getElementById('inp').value;
+                socket.send(value);
+            }
+        </script>
+    </head>
+    <body>
+        <input id="inp" /> <button onclick="send();">Send</button>
+        <div id="out"></div>
+    </body>
+</html>
