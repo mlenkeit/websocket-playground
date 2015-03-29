@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/mlenkeit/websocket-playground/issues"
   },
-  "homepage": "https://github.com/mlenkeit/websocket-playground"
+  "homepage": "https://github.com/mlenkeit/websocket-playground",
+  "dependencies": {
+    "nodejs-websocket": "^1.2.1"
+  }
 }
